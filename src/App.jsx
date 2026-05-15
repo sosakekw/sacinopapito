@@ -330,9 +330,9 @@ function Hero() {
       </div>
 
       <div className="mt-12 grid gap-5 md:grid-cols-3" style={{ animation: "fadeUp .7s .05s ease both" }}>
-        <SocialTile href={LINKS.kick} type="kick" title="Watch Live" sub="Kick.com/bigbetbaba" tone="green" />
-        <SocialTile href={LINKS.discord} type="discord" title="Join Discord" sub="discord.gg/XM92x385n" tone="purple" />
-        <SocialTile href={LINKS.youtube} type="youtube" title="YouTube" sub="@BIGBETBABA" tone="red" />
+        <SocialTile href={LINKS.kick} type="kick" title="Watch Live" sub="kick.com/sacinopapi" tone="green" />
+        <SocialTile href={LINKS.discord} type="discord" title="Join Discord" sub="discord.gg/sacinopapi" tone="purple" />
+        <SocialTile href={LINKS.youtube} type="youtube" title="YouTube" sub="@SacinoPapi" tone="red" />
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1fr]" style={{ animation: "fadeUp .75s .1s ease both" }}>
