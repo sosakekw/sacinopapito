@@ -397,33 +397,51 @@ function FeaturedClip() {
 
   return (
     <SectionCard title="Latest YouTube Upload">
-      <div className="grid gap-8 lg:grid-cols-[1.35fr_.65fr]">
-        <a href={LINKS.youtubeVideos} target="_blank" rel="noopener noreferrer" className="group overflow-hidden rounded-[26px] border border-white/10 bg-black shadow-[0_20px_70px_rgba(0,0,0,.45)] transition hover:-translate-y-1 hover:border-red-500/40">
-          <div className="relative h-[320px] w-full md:h-[520px] xl:h-[620px]">
+      <div className="space-y-5">
+        <a
+          href={LINKS.youtubeVideos}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group block overflow-hidden rounded-[26px] border border-white/10 bg-black shadow-[0_20px_70px_rgba(0,0,0,.45)] transition hover:-translate-y-1 hover:border-red-500/40"
+        >
+          <div className="relative aspect-video w-full overflow-hidden">
             <iframe
               title="Featured SacinoPapi YouTube Video"
-              className="pointer-events-none absolute inset-0 h-full w-full"
+              className="absolute inset-0 h-full w-full"
               src={youtubeEmbedUrl}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
             />
-            <div className="absolute inset-0 bg-transparent" />
           </div>
         </a>
 
-        <div className="flex flex-col justify-center">
-          <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-red-400">
-            <Icon type="youtube" className="h-4 w-4" />
-            YouTube Videos
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/[0.06] bg-[#060d16]/70 p-5">
+          <div>
+            <div className="text-xl font-black uppercase tracking-[-0.03em] text-white">
+              Latest SacinoPapi Upload
+            </div>
+            <div className="mt-1 text-sm text-slate-400">
+              New videos, reactions, wins and stream highlights.
+            </div>
           </div>
 
-          <div className="mt-6 flex flex-wrap gap-3">
-            <a href={LINKS.youtubeVideos} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-3 rounded-xl bg-red-500 px-6 py-3.5 text-sm font-black uppercase text-white transition hover:bg-red-400">
-              Latest Videos
+          <div className="flex flex-wrap gap-3">
+            <a
+              href={LINKS.youtubeVideos}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-3 rounded-xl bg-red-500 px-6 py-3 text-sm font-black uppercase text-white transition hover:bg-red-400"
+            >
+              YouTube
               <Icon type="arrow" className="h-5 w-5" />
             </a>
 
-            <a href={LINKS.kick} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-3 rounded-xl border border-[#53FC18]/70 px-6 py-3.5 text-sm font-black uppercase text-white transition hover:bg-[#53FC18] hover:text-black">
+            <a
+              href={LINKS.kick}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-3 rounded-xl bg-[#53FC18] px-6 py-3 text-sm font-black uppercase text-black transition hover:bg-lime-300"
+            >
               Watch Live
               <Icon type="arrow" className="h-5 w-5" />
             </a>
