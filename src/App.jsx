@@ -394,24 +394,55 @@ function SectionCard({ title, children }) {
 
 function FeaturedClip() {
   return (
-    <SectionCard title="Featured Clip">
+    <SectionCard title="Latest YouTube Upload">
       <div className="grid gap-8 md:grid-cols-[1.15fr_.85fr]">
-        <a href={LINKS.kick} target="_blank" rel="noopener noreferrer" className="group relative min-h-[240px] overflow-hidden rounded-[22px] border border-white/10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,184,0,.18),transparent_30%),linear-gradient(135deg,#25113d,#09111d_65%)] shadow-[0_12px_40px_rgba(0,0,0,.28)]">
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,.08),transparent_35%),radial-gradient(circle_at_72%_15%,rgba(255,208,0,.22),transparent_15%)]" />
-          <div className="absolute left-6 top-5 text-2xl font-black uppercase text-yellow-300 drop-shadow-[0_3px_0_rgba(0,0,0,.55)] md:text-3xl">Massive Win</div>
-          <div className="absolute bottom-5 left-6 text-4xl font-black text-yellow-300 drop-shadow-[0_4px_0_rgba(0,0,0,.55)] md:text-5xl">€26,870</div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex h-18 w-18 items-center justify-center rounded-full border border-white/80 bg-black/35 p-5 text-white backdrop-blur transition group-hover:scale-110 md:h-20 md:w-20">
-              <Icon type="play" className="ml-1 h-9 w-9" />
-            </div>
+        <div className="overflow-hidden rounded-[22px] border border-white/10 bg-black shadow-[0_12px_40px_rgba(0,0,0,.28)]">
+          <div className="relative aspect-video w-full">
+            <iframe
+              title="Latest SacinoPapi YouTube Video"
+              className="absolute inset-0 h-full w-full"
+              src="https://www.youtube.com/embed/videoseries?list=UU5Gv0w7d6KQH0pI0W3mTz6A"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
           </div>
-        </a>
+        </div>
+
         <div className="flex flex-col justify-center">
-          <h3 className="text-2xl font-black uppercase tracking-[-0.03em] text-white">Insane max win!</h3>
-          <p className="mt-4 text-base leading-7 text-slate-300 md:text-lg">Big moments. Real reactions. Only on Kick.</p>
-          <a href={LINKS.kick} target="_blank" rel="noopener noreferrer" className="mt-7 inline-flex items-center justify-center gap-3 rounded-xl border border-[#53FC18]/80 px-6 py-3.5 text-sm font-black uppercase text-white transition hover:bg-[#53FC18] hover:text-black">
-            Watch Clip <Icon type="arrow" className="h-5 w-5" />
-          </a>
+          <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-red-400">
+            <Icon type="youtube" className="h-4 w-4" />
+            Auto Updated
+          </div>
+
+          <h3 className="text-3xl font-black uppercase tracking-[-0.04em] text-white">
+            Latest SacinoPapi Video
+          </h3>
+
+          <p className="mt-4 text-base leading-7 text-slate-300 md:text-lg">
+            Every time a new video is uploaded to the YouTube channel, this section automatically updates with the newest upload.
+          </p>
+
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a
+              href={LINKS.youtube}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-3 rounded-xl bg-red-500 px-6 py-3.5 text-sm font-black uppercase text-white transition hover:bg-red-400"
+            >
+              Visit YouTube
+              <Icon type="arrow" className="h-5 w-5" />
+            </a>
+
+            <a
+              href={LINKS.kick}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-3 rounded-xl border border-[#53FC18]/70 px-6 py-3.5 text-sm font-black uppercase text-white transition hover:bg-[#53FC18] hover:text-black"
+            >
+              Watch Live
+              <Icon type="arrow" className="h-5 w-5" />
+            </a>
+          </div>
         </div>
       </div>
     </SectionCard>
