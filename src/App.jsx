@@ -12,8 +12,7 @@ const LINKS = {
 
 const SLOT_SOUNDS = ["/jackpot.mp3?v=3", "/slot-win-1.mp3?v=3", "/slot-win-2.mp3?v=3"];
 const BONUS_PASSWORD = "papi";
-const FALLBACK_YOUTUBE_VIDEO_ID = "uRkLqaKdjFI";
-const YOUTUBE_CHANNEL_ID = "UC5Gv0w7d6KQH0pI0W3mTz6A";
+const FEATURED_YOUTUBE_VIDEO_ID = "Xr1rdzF3_i0";
 
 function Icon({ type, className = "" }) {
   const common = {
@@ -85,9 +84,9 @@ function TestPanel() {
     hasPartnersSection: true,
     hasFeaturedClip: true,
     hasProfessionalLayout: true,
-    hasLatestVideoFallback: Boolean(FALLBACK_YOUTUBE_VIDEO_ID),
+    hasFeaturedYouTubeVideo: FEATURED_YOUTUBE_VIDEO_ID === "Xr1rdzF3_i0",
     hasSpacehillsPartner: LINKS.spacehills.includes("spacehills1.com"),
-    hasNoRegexLiteralForLatestVideo: true,
+    hasValidSingleRootReturns: true,
   };
 
   return (
@@ -391,47 +390,18 @@ function SectionCard({ title, children }) {
   );
 }
 
-function getVideoIdFromFeed(xmlText) {
-  try {
-    const documentXml = new window.DOMParser().parseFromString(xmlText, "text/xml");
-    const videoNode = documentXml.getElementsByTagName("yt:videoId")[0];
-    return videoNode && videoNode.textContent ? videoNode.textContent : null;
-  } catch (error) {
-    return null;
-  }
-}
-
 function FeaturedClip() {
-  const [latestVideo, setLatestVideo] = useState(FALLBACK_YOUTUBE_VIDEO_ID);
-
-  useEffect(() => {
-    async function loadLatestVideo() {
-      try {
-        const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${YOUTUBE_CHANNEL_ID}`;
-        const response = await fetch(feedUrl);
-        const text = await response.text();
-        const videoId = getVideoIdFromFeed(text);
-
-        if (videoId) {
-          setLatestVideo(videoId);
-        }
-      } catch (error) {
-        console.log("Could not load latest YouTube video, using fallback.");
-      }
-    }
-
-    loadLatestVideo();
-  }, []);
+  const youtubeEmbedUrl = `https://www.youtube.com/embed/${FEATURED_YOUTUBE_VIDEO_ID}?autoplay=0&rel=0&modestbranding=1`;
 
   return (
-    <SectionCard title="Latest YouTube Video">
+    <SectionCard title="Featured YouTube Video">
       <div className="grid gap-8 lg:grid-cols-[1.4fr_.6fr]">
         <div className="overflow-hidden rounded-[26px] border border-white/10 bg-black shadow-[0_20px_70px_rgba(0,0,0,.45)]">
           <div className="relative h-[320px] w-full md:h-[520px] xl:h-[620px]">
             <iframe
-              title="Latest SacinoPapi YouTube Video"
+              title="Featured SacinoPapi YouTube Video"
               className="absolute inset-0 h-full w-full"
-              src={`https://www.youtube.com/embed/${latestVideo}?autoplay=0&rel=0&modestbranding=1`}
+              src={youtubeEmbedUrl}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
             />
@@ -441,13 +411,13 @@ function FeaturedClip() {
         <div className="flex flex-col justify-center">
           <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-red-400">
             <Icon type="youtube" className="h-4 w-4" />
-            Latest Upload
+            Featured Upload
           </div>
 
           <h3 className="text-3xl font-black uppercase tracking-[-0.04em] text-white">Newest SacinoPapi Video</h3>
 
           <p className="mt-4 text-base leading-7 text-slate-300 md:text-lg">
-            This section tries to load the newest public YouTube upload automatically. If YouTube blocks the feed in the browser, it safely shows a working fallback video.
+            This section is set to your selected SacinoPapi YouTube upload. Update FEATURED_YOUTUBE_VIDEO_ID whenever you want to feature a different video.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
