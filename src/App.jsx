@@ -1,4 +1,4 @@
-=import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const BRAND = "SacinoPapi";
 const BRAND_UPPER = "SACINOPAPI";
