@@ -417,12 +417,6 @@ function FeaturedClip() {
             YouTube Videos
           </div>
 
-          <h3 className="text-3xl font-black uppercase tracking-[-0.04em] text-white">Open the newest upload</h3>
-
-          <p className="mt-4 text-base leading-7 text-slate-300 md:text-lg">
-            YouTube blocks frontend sites from reliably auto-scraping the newest upload. This section links directly to the SacinoPapi videos page, where visitors always see the newest upload first.
-          </p>
-
           <div className="mt-6 flex flex-wrap gap-3">
             <a href={LINKS.youtubeVideos} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-3 rounded-xl bg-red-500 px-6 py-3.5 text-sm font-black uppercase text-white transition hover:bg-red-400">
               Latest Videos
