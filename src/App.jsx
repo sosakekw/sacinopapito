@@ -13,7 +13,7 @@ const LINKS = {
 
 const SLOT_SOUNDS = ["/jackpot.mp3?v=3", "/slot-win-1.mp3?v=3", "/slot-win-2.mp3?v=3"];
 const BONUS_PASSWORD = "papi";
-const FEATURED_YOUTUBE_VIDEO_ID = "Xr1rdzF3_i0";
+const FEATURED_YOUTUBE_VIDEO_ID = "Kt8C2ZDtCeE";
 
 function Icon({ type, className = "" }) {
   const common = {
