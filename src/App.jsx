@@ -8,12 +8,15 @@ const LINKS = {
   discord: "https://discord.com/invite/sacinopapi",
   youtube: "https://www.youtube.com/@SacinoPapi",
   youtubeVideos: "https://www.youtube.com/@SacinoPapi/videos",
+  twitch: "https://www.twitch.tv/sacinopapi",
   spacehills: "https://www.spacehills1.com/",
 };
 
 const SLOT_SOUNDS = ["/jackpot.mp3?v=3", "/slot-win-1.mp3?v=3", "/slot-win-2.mp3?v=3"];
 const BONUS_PASSWORD = "papi";
 const FEATURED_YOUTUBE_VIDEO_ID = "Kt8C2ZDtCeE";
+const KICK_CHANNEL = "sacinopapi";
+const KICK_STATUS_API = `https://kick.com/api/v2/channels/${KICK_CHANNEL}`;
 
 function Icon({ type, className = "" }) {
   const common = {
@@ -41,6 +44,11 @@ function Icon({ type, className = "" }) {
     youtube: (
       <svg {...common} viewBox="0 0 24 24" fill="currentColor" stroke="none">
         <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.8ZM9.6 15.5v-7L16 12l-6.4 3.5Z" />
+      </svg>
+    ),
+    twitch: (
+      <svg {...common} viewBox="0 0 24 24" fill="currentColor" stroke="none">
+        <path d="M4 3h17v11.5L16.5 19H13l-2.8 2.8H8V19H4V3Zm2 2v12h4v2l2-2h4l3-3V5H6Zm10 3h2v5h-2V8Zm-5 0h2v5h-2V8Z" />
       </svg>
     ),
     arrow: (
@@ -76,6 +84,8 @@ function TestPanel() {
     hasSacinoPapiKickLink: LINKS.kick.includes("sacinopapi"),
     hasSacinoPapiDiscordLink: LINKS.discord.includes("sacinopapi"),
     hasSacinoPapiYoutubeLink: LINKS.youtube.includes("SacinoPapi"),
+    hasSacinoPapiTwitchLink: LINKS.twitch.includes("sacinopapi"),
+    hasKickStatusApi: KICK_STATUS_API.includes("api/v2/channels"),
     hasResponsibleGamblingDisclaimer: true,
     hasPartnersSection: true,
     hasFeaturedClip: true,
@@ -272,6 +282,48 @@ function LoadingScreen() {
   );
 }
 
+function useKickLiveStatus() {
+  const [status, setStatus] = useState("checking");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function checkKickStatus() {
+      try {
+        const response = await fetch(KICK_STATUS_API, {
+          cache: "no-store",
+          headers: { Accept: "application/json" },
+        });
+
+        if (!response.ok) {
+          throw new Error("Kick status request failed");
+        }
+
+        const data = await response.json();
+        const isLive = Boolean(data?.livestream || data?.is_live || data?.live_stream);
+
+        if (!cancelled) {
+          setStatus(isLive ? "live" : "offline");
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setStatus("unknown");
+        }
+      }
+    }
+
+    checkKickStatus();
+    const timer = window.setInterval(checkKickStatus, 60000);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, []);
+
+  return status;
+}
+
 function LandingPage({ onEnter }) {
   const [pressed, setPressed] = useState(false);
 
@@ -302,7 +354,7 @@ function Header({ onEnter, pressed }) {
             Home
             <span className="absolute -bottom-[21px] left-1/2 h-[2px] w-10 -translate-x-1/2 rounded-full bg-[#53FC18]" />
           </button>
-          <button type="button" onClick={onEnter} className="transition hover:text-white">Clips</button>
+          <a href={LINKS.youtubeVideos} target="_blank" rel="noopener noreferrer" className="transition hover:text-white">Videos</a>
         </div>
 
         <a href={LINKS.kick} target="_blank" rel="noopener noreferrer" className="rounded-xl bg-[#53FC18] px-6 py-3 text-sm font-black uppercase tracking-[0.08em] text-black transition duration-300 hover:-translate-y-0.5 hover:bg-lime-300">
@@ -314,25 +366,51 @@ function Header({ onEnter, pressed }) {
 }
 
 function Hero() {
+  const kickStatus = useKickLiveStatus();
+  const statusConfig = {
+    live: {
+      dot: "bg-[#53FC18] shadow-[0_0_16px_rgba(83,252,24,.8)]",
+      text: "LIVE ON KICK",
+      textClass: "text-[#53FC18]",
+    },
+    offline: {
+      dot: "bg-slate-500",
+      text: "OFFLINE ON KICK",
+      textClass: "text-slate-400",
+    },
+    checking: {
+      dot: "bg-yellow-300 shadow-[0_0_16px_rgba(253,224,71,.5)]",
+      text: "CHECKING KICK",
+      textClass: "text-yellow-200",
+    },
+    unknown: {
+      dot: "bg-slate-500",
+      text: "CHECK KICK STATUS",
+      textClass: "text-slate-400",
+    },
+  }[kickStatus];
+
   return (
     <section className="relative z-10 mx-auto max-w-[1380px] px-5 pb-10 pt-16 lg:px-8">
       <div className="text-center" style={{ animation: "fadeUp .65s ease both" }}>
-        <h1 className="text-6xl font-black uppercase leading-[0.92] tracking-[-0.075em] text-white sm:text-7xl md:text-8xl lg:text-[112px]">
-          {BRAND_UPPER}
+        <h1 className="text-5xl font-black uppercase leading-[0.92] tracking-[-0.07em] text-white sm:text-7xl md:text-8xl lg:text-[104px]">
+          SACINOPAPI
         </h1>
-        <p className="mt-5 text-lg font-semibold uppercase tracking-[0.02em] text-slate-300 md:text-2xl">Live streams • Big wins • Real community</p>
+        <p className="mx-auto mt-5 max-w-3xl text-lg font-semibold tracking-[0.01em] text-slate-300 md:text-2xl">
+          
+        </p>
         <div className="mt-7 flex flex-wrap items-center justify-center gap-3 text-lg font-semibold text-slate-300">
-          <span className="h-3 w-3 rounded-full bg-[#53FC18] shadow-[0_0_16px_rgba(83,252,24,.8)]" />
-          <span className="font-black text-[#53FC18]">LIVE ON KICK</span>
+          <span className={`h-3 w-3 rounded-full ${statusConfig.dot}`} />
+          <span className={`font-black ${statusConfig.textClass}`}>{statusConfig.text}</span>
           <span className="text-slate-500">•</span>
-          <span>Almost every day</span>
+          
         </div>
       </div>
 
       <div className="mt-12 grid gap-5 md:grid-cols-3" style={{ animation: "fadeUp .7s .05s ease both" }}>
-        <SocialTile href={LINKS.kick} type="kick" title="Watch Live" sub="kick.com/sacinopapi" tone="green" />
-        <SocialTile href={LINKS.discord} type="discord" title="Join Discord" sub="discord.gg/sacinopapi" tone="purple" />
-        <SocialTile href={LINKS.youtube} type="youtube" title="YouTube" sub="@SacinoPapi" tone="red" />
+        <SocialTile href={LINKS.kick} type="kick" title="WATCH LIVE" sub="kick.com/sacinopapi" tone="green" />
+        <SocialTile href={LINKS.discord} type="discord" title="JOIN DISCORD" sub="discord.gg/sacinopapi" tone="purple" />
+        <SocialTile href={LINKS.youtube} type="youtube" title="YOUTUBE" sub="@SacinoPapi" tone="red" />
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1fr]" style={{ animation: "fadeUp .75s .1s ease both" }}>
@@ -361,6 +439,11 @@ function SocialTile({ href, type, title, sub, tone }) {
       border: "border-red-500/70 hover:border-red-400",
       sub: "text-red-400",
       iconBg: "bg-red-500 text-white",
+    },
+    blue: {
+      border: "border-sky-400/60 hover:border-sky-300",
+      sub: "text-sky-300",
+      iconBg: "bg-sky-500 text-white",
     },
   }[tone];
 
@@ -396,58 +479,23 @@ function FeaturedClip() {
   const youtubeEmbedUrl = `https://www.youtube.com/embed/${FEATURED_YOUTUBE_VIDEO_ID}?autoplay=0&rel=0&modestbranding=1`;
 
   return (
-    <SectionCard title="Latest YouTube Upload">
-      <div className="space-y-5">
-        <a
-          href={LINKS.youtubeVideos}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group block overflow-hidden rounded-[26px] border border-white/10 bg-black shadow-[0_20px_70px_rgba(0,0,0,.45)] transition hover:-translate-y-1 hover:border-red-500/40"
-        >
-          <div className="relative aspect-video w-full overflow-hidden">
-            <iframe
-              title="Featured SacinoPapi YouTube Video"
-              className="absolute inset-0 h-full w-full"
-              src={youtubeEmbedUrl}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            />
-          </div>
-        </a>
-
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/[0.06] bg-[#060d16]/70 p-5">
-          <div>
-            <div className="text-xl font-black uppercase tracking-[-0.03em] text-white">
-              Latest SacinoPapi Upload
-            </div>
-            <div className="mt-1 text-sm text-slate-400">
-              New videos, reactions, wins and stream highlights.
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-3">
-            <a
-              href={LINKS.youtubeVideos}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-3 rounded-xl bg-red-500 px-6 py-3 text-sm font-black uppercase text-white transition hover:bg-red-400"
-            >
-              YouTube
-              <Icon type="arrow" className="h-5 w-5" />
-            </a>
-
-            <a
-              href={LINKS.kick}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-3 rounded-xl bg-[#53FC18] px-6 py-3 text-sm font-black uppercase text-black transition hover:bg-lime-300"
-            >
-              Watch Live
-              <Icon type="arrow" className="h-5 w-5" />
-            </a>
-          </div>
+    <SectionCard title="Featured Video">
+      <a
+        href={LINKS.youtubeVideos}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group block overflow-hidden rounded-[26px] border border-white/10 bg-black shadow-[0_20px_70px_rgba(0,0,0,.45)] transition hover:-translate-y-1 hover:border-red-500/40"
+      >
+        <div className="relative aspect-video w-full overflow-hidden">
+          <iframe
+            title="Featured SacinoPapi YouTube Video"
+            className="absolute inset-0 h-full w-full"
+            src={youtubeEmbedUrl}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
         </div>
-      </div>
+      </a>
     </SectionCard>
   );
 }
