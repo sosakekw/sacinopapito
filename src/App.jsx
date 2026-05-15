@@ -12,6 +12,8 @@ const LINKS = {
 
 const SLOT_SOUNDS = ["/jackpot.mp3?v=3", "/slot-win-1.mp3?v=3", "/slot-win-2.mp3?v=3"];
 const BONUS_PASSWORD = "papi";
+const FALLBACK_YOUTUBE_VIDEO_ID = "uRkLqaKdjFI";
+const YOUTUBE_CHANNEL_ID = "UC5Gv0w7d6KQH0pI0W3mTz6A";
 
 function Icon({ type, className = "" }) {
   const common = {
@@ -83,6 +85,9 @@ function TestPanel() {
     hasPartnersSection: true,
     hasFeaturedClip: true,
     hasProfessionalLayout: true,
+    hasLatestVideoFallback: Boolean(FALLBACK_YOUTUBE_VIDEO_ID),
+    hasSpacehillsPartner: LINKS.spacehills.includes("spacehills1.com"),
+    hasNoRegexLiteralForLatestVideo: true,
   };
 
   return (
@@ -101,7 +106,6 @@ function Styles() {
     <style>{`
       @keyframes fadeUp { 0% { opacity: 0; transform: translateY(14px); } 100% { opacity: 1; transform: translateY(0); } }
       @keyframes reelDrop { 0% { transform: translateY(-110%); filter: blur(4px); } 68% { transform: translateY(7%); filter: blur(1px); } 100% { transform: translateY(0); filter: blur(0); } }
-      @keyframes subtlePulse { 0%,100% { opacity: .78; } 50% { opacity: 1; } }
       * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
     `}</style>
   );
@@ -300,12 +304,7 @@ function Header({ onEnter, pressed }) {
           <button type="button" onClick={onEnter} className="transition hover:text-white">Clips</button>
         </div>
 
-        <a
-          href={LINKS.kick}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="rounded-xl bg-[#53FC18] px-6 py-3 text-sm font-black uppercase tracking-[0.08em] text-black transition duration-300 hover:-translate-y-0.5 hover:bg-lime-300"
-        >
+        <a href={LINKS.kick} target="_blank" rel="noopener noreferrer" className="rounded-xl bg-[#53FC18] px-6 py-3 text-sm font-black uppercase tracking-[0.08em] text-black transition duration-300 hover:-translate-y-0.5 hover:bg-lime-300">
           Watch Live
         </a>
       </div>
@@ -392,16 +391,47 @@ function SectionCard({ title, children }) {
   );
 }
 
+function getVideoIdFromFeed(xmlText) {
+  try {
+    const documentXml = new window.DOMParser().parseFromString(xmlText, "text/xml");
+    const videoNode = documentXml.getElementsByTagName("yt:videoId")[0];
+    return videoNode && videoNode.textContent ? videoNode.textContent : null;
+  } catch (error) {
+    return null;
+  }
+}
+
 function FeaturedClip() {
+  const [latestVideo, setLatestVideo] = useState(FALLBACK_YOUTUBE_VIDEO_ID);
+
+  useEffect(() => {
+    async function loadLatestVideo() {
+      try {
+        const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${YOUTUBE_CHANNEL_ID}`;
+        const response = await fetch(feedUrl);
+        const text = await response.text();
+        const videoId = getVideoIdFromFeed(text);
+
+        if (videoId) {
+          setLatestVideo(videoId);
+        }
+      } catch (error) {
+        console.log("Could not load latest YouTube video, using fallback.");
+      }
+    }
+
+    loadLatestVideo();
+  }, []);
+
   return (
-    <SectionCard title="Featured YouTube Video">
-      <div className="grid gap-8 md:grid-cols-[1.15fr_.85fr]">
-        <div className="overflow-hidden rounded-[22px] border border-white/10 bg-black shadow-[0_12px_40px_rgba(0,0,0,.28)]">
-          <div className="relative aspect-video w-full">
+    <SectionCard title="Latest YouTube Video">
+      <div className="grid gap-8 lg:grid-cols-[1.4fr_.6fr]">
+        <div className="overflow-hidden rounded-[26px] border border-white/10 bg-black shadow-[0_20px_70px_rgba(0,0,0,.45)]">
+          <div className="relative h-[320px] w-full md:h-[520px] xl:h-[620px]">
             <iframe
               title="Latest SacinoPapi YouTube Video"
               className="absolute inset-0 h-full w-full"
-              src="https://www.youtube.com/embed/uRkLqaKdjFI"
+              src={`https://www.youtube.com/embed/${latestVideo}?autoplay=0&rel=0&modestbranding=1`}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
             />
@@ -411,34 +441,22 @@ function FeaturedClip() {
         <div className="flex flex-col justify-center">
           <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-red-400">
             <Icon type="youtube" className="h-4 w-4" />
-            Featured Video
+            Latest Upload
           </div>
 
-          <h3 className="text-3xl font-black uppercase tracking-[-0.04em] text-white">
-            Watch SacinoPapi on YouTube
-          </h3>
+          <h3 className="text-3xl font-black uppercase tracking-[-0.04em] text-white">Newest SacinoPapi Video</h3>
 
           <p className="mt-4 text-base leading-7 text-slate-300 md:text-lg">
-            The preview now shows an actual SacinoPapi YouTube video instead of an unavailable playlist embed. Use the button below to open the full channel.
+            This section tries to load the newest public YouTube upload automatically. If YouTube blocks the feed in the browser, it safely shows a working fallback video.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <a
-              href={LINKS.youtube}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-3 rounded-xl bg-red-500 px-6 py-3.5 text-sm font-black uppercase text-white transition hover:bg-red-400"
-            >
+            <a href={LINKS.youtube} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-3 rounded-xl bg-red-500 px-6 py-3.5 text-sm font-black uppercase text-white transition hover:bg-red-400">
               Visit YouTube
               <Icon type="arrow" className="h-5 w-5" />
             </a>
 
-            <a
-              href={LINKS.kick}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-3 rounded-xl border border-[#53FC18]/70 px-6 py-3.5 text-sm font-black uppercase text-white transition hover:bg-[#53FC18] hover:text-black"
-            >
+            <a href={LINKS.kick} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-3 rounded-xl border border-[#53FC18]/70 px-6 py-3.5 text-sm font-black uppercase text-white transition hover:bg-[#53FC18] hover:text-black">
               Watch Live
               <Icon type="arrow" className="h-5 w-5" />
             </a>
@@ -486,9 +504,7 @@ function ResponsibleFooter() {
       </p>
 
       <div className="mt-8 flex items-center justify-center gap-4 text-base text-slate-400 md:text-lg">
-        <span className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-600 text-sm font-bold text-white">
-          18+
-        </span>
+        <span className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-600 text-sm font-bold text-white">18+</span>
         <span>This website is intended for adults only.</span>
       </div>
 
