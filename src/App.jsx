@@ -512,9 +512,13 @@ function Partners() {
 
 function PartnerRow({ name, href }) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="grid items-center gap-5 rounded-[22px] border border-white/[0.06] bg-[#060d16]/82 p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#53FC18]/30 hover:bg-[#0a1320] sm:grid-cols-[180px_1fr_150px]">
-      <div className="flex min-h-[62px] items-center justify-center text-center text-3xl font-black uppercase leading-none text-white">
-        <span className="tracking-[-0.06em]"><span className="text-[#53FC18]">SPACE</span><br />HILLS</span>
+    <a href={href} target="_blank" rel="noopener noreferrer" className="group grid items-center gap-5 rounded-[22px] border border-white/[0.06] bg-[#060d16]/82 p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#53FC18]/30 hover:bg-[#0a1320] sm:grid-cols-[220px_1fr_150px]">
+      <div className="flex min-h-[120px] items-center justify-center overflow-hidden rounded-2xl bg-[#0b1320] p-2">
+        <img
+          src="/spacehills-logo.png"
+          alt="Spacehills mascot"
+          className="h-28 w-auto object-contain transition duration-300 group-hover:scale-105"
+        />
       </div>
       <div>
         <div className="text-xl font-black uppercase text-white">{name}</div>
