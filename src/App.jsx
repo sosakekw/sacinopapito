@@ -324,42 +324,77 @@ function useKickLiveStatus() {
   return status;
 }
 
-function LandingPage({ onEnter }) {
-  const [pressed, setPressed] = useState(false);
-
-  function handleEnterClick() {
-    setPressed(true);
-    window.setTimeout(onEnter, 160);
-  }
-
+function LandingPage() {
   return (
     <main className="relative min-h-screen overflow-hidden text-white">
       <Styles />
       <TestPanel />
       <Background />
-      <Header onEnter={handleEnterClick} pressed={pressed} />
+      <Header />
       <Hero />
     </main>
   );
 }
 
-function Header({ onEnter, pressed }) {
+function Header() {
   return (
     <nav className="sticky top-0 z-30 border-b border-white/[0.06] bg-[#040812]/80 backdrop-blur-2xl">
       <div className="mx-auto flex max-w-[1380px] items-center justify-between px-5 py-4 lg:px-8">
         <LogoMark />
 
-        <div className="hidden items-center gap-14 text-[13px] font-black uppercase tracking-[0.18em] text-slate-500 md:flex">
-          <button type="button" onClick={onEnter} className={`relative text-[#53FC18] transition ${pressed ? "scale-95" : ""}`}>
-            Home
-            <span className="absolute -bottom-[21px] left-1/2 h-[2px] w-10 -translate-x-1/2 rounded-full bg-[#53FC18]" />
-          </button>
-          <a href={LINKS.youtubeVideos} target="_blank" rel="noopener noreferrer" className="transition hover:text-white">Videos</a>
-        </div>
+        <div className="flex items-center gap-3">
+          <a
+            href={LINKS.kick}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-[#0a111b] transition duration-300 hover:border-[#53FC18]/50 hover:bg-[#101a28]"
+            aria-label="Kick"
+          >
+            <Icon
+              type="kick"
+              className="h-8 w-8 text-[#53FC18] transition duration-300 group-hover:scale-110"
+            />
+          </a>
 
-        <a href={LINKS.kick} target="_blank" rel="noopener noreferrer" className="rounded-xl bg-[#53FC18] px-6 py-3 text-sm font-black uppercase tracking-[0.08em] text-black transition duration-300 hover:-translate-y-0.5 hover:bg-lime-300">
-          Watch Live
-        </a>
+          <a
+            href={LINKS.discord}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-[#0a111b] transition duration-300 hover:border-[#7868ff]/50 hover:bg-[#101a28]"
+            aria-label="Discord"
+          >
+            <Icon
+              type="discord"
+              className="h-7 w-7 text-[#7868ff] transition duration-300 group-hover:scale-110"
+            />
+          </a>
+
+          <a
+            href={LINKS.youtube}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-[#0a111b] transition duration-300 hover:border-red-500/50 hover:bg-[#101a28]"
+            aria-label="YouTube"
+          >
+            <Icon
+              type="youtube"
+              className="h-7 w-7 text-red-500 transition duration-300 group-hover:scale-110"
+            />
+          </a>
+
+          <a
+            href={LINKS.twitch}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-[#0a111b] transition duration-300 hover:border-purple-500/50 hover:bg-[#101a28]"
+            aria-label="Twitch"
+          >
+            <Icon
+              type="twitch"
+              className="h-7 w-7 text-purple-500 transition duration-300 group-hover:scale-110"
+            />
+          </a>
+        </div>
       </div>
     </nav>
   );
@@ -465,12 +500,13 @@ function SocialTile({ href, type, title, sub, tone }) {
 
 function SectionCard({ title, children }) {
   return (
-    <div className="rounded-[26px] border border-white/[0.06] bg-[#08111c]/92 p-6 shadow-[0_18px_60px_rgba(0,0,0,.32)] backdrop-blur-2xl">
-      <div className="mb-5 flex items-center gap-3">
-        <span className="h-6 w-1 rounded-full bg-[#53FC18]" />
-        <h2 className="text-xl font-black uppercase tracking-[-0.02em] text-white md:text-2xl">{title}</h2>
+    <div className="relative overflow-hidden rounded-[30px] border border-white/[0.08] bg-[#08111c]/90 p-5 shadow-[0_20px_70px_rgba(0,0,0,.38)] backdrop-blur-2xl md:p-6">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(83,252,24,.055),transparent_34%)]" />
+      <div className="relative mb-6 flex items-center gap-3">
+        <span className="h-7 w-1 rounded-full bg-[#53FC18] shadow-[0_0_18px_rgba(83,252,24,.35)]" />
+        <h2 className="text-2xl font-black uppercase tracking-[-0.035em] text-white">{title}</h2>
       </div>
-      {children}
+      <div className="relative">{children}</div>
     </div>
   );
 }
@@ -502,8 +538,8 @@ function FeaturedClip() {
 
 function Partners() {
   return (
-    <SectionCard title="Our Partners">
-      <div className="grid gap-4">
+    <SectionCard title="Official Partners">
+      <div className="grid gap-5">
         <PartnerRow name="Spacehills" href={LINKS.spacehills} />
       </div>
     </SectionCard>
@@ -512,22 +548,52 @@ function Partners() {
 
 function PartnerRow({ name, href }) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="group grid items-center gap-5 rounded-[22px] border border-white/[0.06] bg-[#060d16]/82 p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#53FC18]/30 hover:bg-[#0a1320] sm:grid-cols-[220px_1fr_150px]">
-      <div className="flex min-h-[120px] items-center justify-center overflow-hidden rounded-2xl bg-[#0b1320] p-2">
-        <img
-          src="/spacehills-logo.png"
-          alt="Spacehills mascot"
-          className="h-28 w-auto object-contain transition duration-300 group-hover:scale-105"
-        />
-      </div>
-      <div>
-        <div className="text-xl font-black uppercase text-white">{name}</div>
-        <div className="mt-2 flex items-center gap-3 text-base font-bold uppercase text-slate-300">
-          Use code <span className="rounded-md bg-[#53FC18]/18 px-3 py-1 text-[#53FC18] ring-1 ring-[#53FC18]/20">PAPI</span>
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group relative block overflow-hidden rounded-[30px] border border-white/10 bg-gradient-to-br from-[#0d1725] via-[#09111b] to-[#050910] p-4 transition-all duration-300 hover:-translate-y-1 hover:border-[#53FC18]/45 hover:shadow-[0_0_55px_rgba(83,252,24,.12)] sm:p-5"
+    >
+      <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_16%_20%,rgba(83,252,24,.12),transparent_24%),radial-gradient(circle_at_90%_10%,rgba(120,104,255,.13),transparent_30%)]" />
+      <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-[#53FC18]/10 blur-3xl transition duration-300 group-hover:bg-[#53FC18]/20" />
+
+      <div className="relative flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+          <div className="relative mx-auto flex h-36 w-full max-w-[220px] items-center justify-center overflow-hidden rounded-[24px] border border-white/10 bg-[#0f1826] p-3 shadow-[inset_0_0_30px_rgba(255,255,255,.025),0_18px_35px_rgba(0,0,0,.32)] sm:mx-0 sm:h-32 sm:w-32">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(83,252,24,.10),transparent_60%)]" />
+            <img
+              src="/spacehills-logo.png"
+              alt="Spacehills mascot"
+              className="relative h-full w-full rounded-[18px] object-cover transition duration-300 group-hover:scale-105"
+            />
+          </div>
+
+          <div className="text-center sm:text-left">
+            <div className="inline-flex rounded-full border border-[#53FC18]/20 bg-[#53FC18]/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.22em] text-[#53FC18]">
+              Partner Bonus
+            </div>
+
+            <div className="mt-3 text-3xl font-black uppercase leading-none tracking-[-0.045em] text-white sm:text-4xl">
+              {name}
+            </div>
+
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-3 sm:justify-start">
+              <span className="text-xs font-black uppercase tracking-[0.22em] text-slate-500">
+                Use Code
+              </span>
+              <span className="rounded-2xl border border-[#53FC18]/35 bg-[#53FC18]/12 px-5 py-2.5 text-xl font-black tracking-[0.14em] text-[#53FC18] shadow-[0_0_24px_rgba(83,252,24,.16)]">
+                PAPI
+              </span>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="flex items-center justify-center gap-2 rounded-xl bg-[#53FC18] px-5 py-3.5 text-sm font-black uppercase text-black transition hover:bg-lime-300">
-        Play Now <Icon type="external" className="h-4 w-4" />
+
+        <div className="flex justify-center lg:justify-end">
+          <div className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#53FC18] px-7 py-4 text-sm font-black uppercase tracking-[0.12em] text-black shadow-[0_14px_35px_rgba(83,252,24,.25)] transition-all duration-300 group-hover:scale-[1.03] group-hover:bg-lime-300 sm:w-auto">
+            Play Now
+            <Icon type="external" className="h-4 w-4" />
+          </div>
+        </div>
       </div>
     </a>
   );
@@ -559,28 +625,23 @@ function MainPage() {
     <main className="relative min-h-screen overflow-hidden text-white">
       <Styles />
       <Background />
-      <Header onEnter={() => {}} pressed={false} />
+      <Header />
       <Hero />
     </main>
   );
 }
 
 export default function App() {
-  const [screen, setScreen] = useState("landing");
   const params = new URLSearchParams(window.location.search);
   const isBonusOverlay = params.get("bonusOverlay") === "1";
 
-  function handleEnter() {
-    setScreen("loading");
-    window.setTimeout(() => setScreen("main"), 900);
-  }
 
   if (isBonusOverlay) return <BonusOverlayPage />;
 
   return (
     <>
       <SEO />
-      {screen === "loading" ? <LoadingScreen /> : screen === "main" ? <MainPage /> : <LandingPage onEnter={handleEnter} />}
+      <MainPage />
     </>
   );
 }
