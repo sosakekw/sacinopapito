@@ -394,14 +394,14 @@ function SectionCard({ title, children }) {
 
 function FeaturedClip() {
   return (
-    <SectionCard title="Latest YouTube Upload">
+    <SectionCard title="Featured YouTube Video">
       <div className="grid gap-8 md:grid-cols-[1.15fr_.85fr]">
         <div className="overflow-hidden rounded-[22px] border border-white/10 bg-black shadow-[0_12px_40px_rgba(0,0,0,.28)]">
           <div className="relative aspect-video w-full">
             <iframe
               title="Latest SacinoPapi YouTube Video"
               className="absolute inset-0 h-full w-full"
-              src="https://www.youtube.com/embed/videoseries?list=UU5Gv0w7d6KQH0pI0W3mTz6A"
+              src="https://www.youtube.com/embed/uRkLqaKdjFI"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
             />
@@ -411,15 +411,15 @@ function FeaturedClip() {
         <div className="flex flex-col justify-center">
           <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-red-400">
             <Icon type="youtube" className="h-4 w-4" />
-            Auto Updated
+            Featured Video
           </div>
 
           <h3 className="text-3xl font-black uppercase tracking-[-0.04em] text-white">
-            Latest SacinoPapi Video
+            Watch SacinoPapi on YouTube
           </h3>
 
           <p className="mt-4 text-base leading-7 text-slate-300 md:text-lg">
-            Every time a new video is uploaded to the YouTube channel, this section automatically updates with the newest upload.
+            The preview now shows an actual SacinoPapi YouTube video instead of an unavailable playlist embed. Use the button below to open the full channel.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
