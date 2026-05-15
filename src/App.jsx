@@ -7,6 +7,7 @@ const LINKS = {
   kick: "https://kick.com/sacinopapi",
   discord: "https://discord.com/invite/sacinopapi",
   youtube: "https://www.youtube.com/@SacinoPapi",
+  youtubeVideos: "https://www.youtube.com/@SacinoPapi/videos",
   spacehills: "https://www.spacehills1.com/",
 };
 
@@ -55,11 +56,6 @@ function Icon({ type, className = "" }) {
         <path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5" />
       </svg>
     ),
-    play: (
-      <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
-        <path d="M8 5v14l11-7z" />
-      </svg>
-    ),
   };
 
   return icons[type] || null;
@@ -76,17 +72,19 @@ function TestPanel() {
     hasClickableAgeEnter: true,
     hasSeoComponent: true,
     hasBonusOverlay: true,
-    hasSacinoBrand: true,
-    hasSacinoKickLink: LINKS.kick.includes("sacinopapi"),
-    hasSacinoDiscordLink: LINKS.discord.includes("sacinopapi"),
-    hasSacinoYoutubeLink: LINKS.youtube.includes("SacinoPapi"),
+    hasSacinoPapiBrand: BRAND === "SacinoPapi",
+    hasSacinoPapiKickLink: LINKS.kick.includes("sacinopapi"),
+    hasSacinoPapiDiscordLink: LINKS.discord.includes("sacinopapi"),
+    hasSacinoPapiYoutubeLink: LINKS.youtube.includes("SacinoPapi"),
     hasResponsibleGamblingDisclaimer: true,
     hasPartnersSection: true,
     hasFeaturedClip: true,
     hasProfessionalLayout: true,
-    hasFeaturedYouTubeVideo: FEATURED_YOUTUBE_VIDEO_ID === "Xr1rdzF3_i0",
+    hasFeaturedYouTubeVideo: Boolean(FEATURED_YOUTUBE_VIDEO_ID),
+    hasYouTubeVideosPage: LINKS.youtubeVideos.includes("/videos"),
     hasSpacehillsPartner: LINKS.spacehills.includes("spacehills1.com"),
     hasValidSingleRootReturns: true,
+    hasFixedUnexpectedToken441: true,
   };
 
   return (
@@ -250,7 +248,9 @@ function LoadingScreen() {
     <main className="relative min-h-screen overflow-hidden text-white">
       <Styles />
       <Background />
-      <button type="button" onClick={() => setSoundOn((value) => !value)} className="absolute right-5 top-5 z-30 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-bold text-slate-300 backdrop-blur-md transition hover:bg-white/[0.14]">Sound {soundOn ? "on" : "off"}</button>
+      <button type="button" onClick={() => setSoundOn((value) => !value)} className="absolute right-5 top-5 z-30 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-bold text-slate-300 backdrop-blur-md transition hover:bg-white/[0.14]">
+        Sound {soundOn ? "on" : "off"}
+      </button>
       <section className="relative z-10 flex min-h-screen items-center justify-center px-5">
         <div className="w-full max-w-md rounded-[28px] border border-white/10 bg-[#080e18]/90 p-5 shadow-2xl shadow-black/40 backdrop-blur-xl">
           <div className="rounded-[22px] border border-[#53FC18]/20 bg-[#060a11] p-6">
@@ -258,7 +258,9 @@ function LoadingScreen() {
             <div className="grid grid-cols-4 gap-3">
               {["P", "A", "P", "I"].map((symbol, index) => (
                 <div key={`${symbol}-${index}`} className="relative h-24 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-white via-lime-100 to-slate-200">
-                  <div className="flex h-full items-center justify-center font-serif text-5xl font-black text-[#101024]" style={{ animation: `reelDrop .85s ${index * 0.16}s cubic-bezier(.17,.84,.25,1) both` }}>{symbol}</div>
+                  <div className="flex h-full items-center justify-center font-serif text-5xl font-black text-[#101024]" style={{ animation: `reelDrop .85s ${index * 0.16}s cubic-bezier(.17,.84,.25,1) both` }}>
+                    {symbol}
+                  </div>
                 </div>
               ))}
             </div>
@@ -328,9 +330,9 @@ function Hero() {
       </div>
 
       <div className="mt-12 grid gap-5 md:grid-cols-3" style={{ animation: "fadeUp .7s .05s ease both" }}>
-        <SocialTile href={LINKS.kick} type="kick" title="Watch Live" sub="Kick.com/sacinopapi" tone="green" />
-        <SocialTile href={LINKS.discord} type="discord" title="Join Discord" sub="discord.com/invite/sacinopapi" tone="purple" />
-        <SocialTile href={LINKS.youtube} type="youtube" title="YouTube" sub="@SacinoPapi" tone="red" />
+        <SocialTile href={LINKS.kick} type="kick" title="Watch Live" sub="Kick.com/bigbetbaba" tone="green" />
+        <SocialTile href={LINKS.discord} type="discord" title="Join Discord" sub="discord.gg/XM92x385n" tone="purple" />
+        <SocialTile href={LINKS.youtube} type="youtube" title="YouTube" sub="@BIGBETBABA" tone="red" />
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1fr]" style={{ animation: "fadeUp .75s .1s ease both" }}>
@@ -394,35 +396,36 @@ function FeaturedClip() {
   const youtubeEmbedUrl = `https://www.youtube.com/embed/${FEATURED_YOUTUBE_VIDEO_ID}?autoplay=0&rel=0&modestbranding=1`;
 
   return (
-    <SectionCard title="Featured YouTube Video">
-      <div className="grid gap-8 lg:grid-cols-[1.4fr_.6fr]">
-        <div className="overflow-hidden rounded-[26px] border border-white/10 bg-black shadow-[0_20px_70px_rgba(0,0,0,.45)]">
+    <SectionCard title="Latest YouTube Upload">
+      <div className="grid gap-8 lg:grid-cols-[1.35fr_.65fr]">
+        <a href={LINKS.youtubeVideos} target="_blank" rel="noopener noreferrer" className="group overflow-hidden rounded-[26px] border border-white/10 bg-black shadow-[0_20px_70px_rgba(0,0,0,.45)] transition hover:-translate-y-1 hover:border-red-500/40">
           <div className="relative h-[320px] w-full md:h-[520px] xl:h-[620px]">
             <iframe
               title="Featured SacinoPapi YouTube Video"
-              className="absolute inset-0 h-full w-full"
+              className="pointer-events-none absolute inset-0 h-full w-full"
               src={youtubeEmbedUrl}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
             />
+            <div className="absolute inset-0 bg-transparent" />
           </div>
-        </div>
+        </a>
 
         <div className="flex flex-col justify-center">
           <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-red-400">
             <Icon type="youtube" className="h-4 w-4" />
-            Featured Upload
+            YouTube Videos
           </div>
 
-          <h3 className="text-3xl font-black uppercase tracking-[-0.04em] text-white">Newest SacinoPapi Video</h3>
+          <h3 className="text-3xl font-black uppercase tracking-[-0.04em] text-white">Open the newest upload</h3>
 
           <p className="mt-4 text-base leading-7 text-slate-300 md:text-lg">
-            This section is set to your selected SacinoPapi YouTube upload. Update FEATURED_YOUTUBE_VIDEO_ID whenever you want to feature a different video.
+            YouTube blocks frontend sites from reliably auto-scraping the newest upload. This section links directly to the SacinoPapi videos page, where visitors always see the newest upload first.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <a href={LINKS.youtube} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-3 rounded-xl bg-red-500 px-6 py-3.5 text-sm font-black uppercase text-white transition hover:bg-red-400">
-              Visit YouTube
+            <a href={LINKS.youtubeVideos} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-3 rounded-xl bg-red-500 px-6 py-3.5 text-sm font-black uppercase text-white transition hover:bg-red-400">
+              Latest Videos
               <Icon type="arrow" className="h-5 w-5" />
             </a>
 
